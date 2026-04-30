@@ -85,14 +85,13 @@
   position: absolute;
   top: 25px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%, 0);
   font-size: 40px;
   pointer-events: none;
 }
 
 .ring {
   position: absolute;
-  top: 40px; /* same as your padding-top */
   left: 50%;
   transform: translateX(-50%);
   width: 140px;
@@ -284,9 +283,11 @@ candidates.forEach((c, index) => {
   scale = Math.min(scale, MAX_SCALE);
   const baseSize = 120;
   const size = baseSize * scale;
-
+  
   ring.style.width = `${size}px`;
   ring.style.height = `${size}px`;
+
+  ring.style.top = `${50 + (size - 120) / 2}px`;
 
   // Apply gold/silver/bronze
   if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
