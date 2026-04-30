@@ -124,11 +124,21 @@
 
       const rows = text.trim().split("\n").map(r => r.split(","));
 
-      const data = rows.slice(1).map(r => ({
-        name: r[0].trim(),
-        votes: Number(r[1]),
-        //img: PHOTO[r[0]] || "fallback.jpg"
-      }));
+const data = rows.slice(1).map(r => {
+  console.log(
+    "CSV name:", JSON.stringify(r[0]),
+    "→ Trimmed:", JSON.stringify(r[0].trim()),
+    "→ Photo:", PHOTO[r[0].trim()]
+  );
+
+  const name = r[0].trim();
+
+  return {
+    name,
+    votes: Number(r[1]),
+    //img: PHOTO[name] || "https://via.placeholder.com/200?text=No+Photo"
+  };
+});
       updateFromSheet(data);
     } catch (err) {
       console.error("Error fetching CSV:", err);
