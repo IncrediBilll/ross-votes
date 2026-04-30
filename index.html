@@ -127,7 +127,7 @@
       const data = rows.slice(1).map(r => ({
         name: r[0].trim(),
         votes: Number(r[1]),
-        img: PHOTO[r[0]] || "fallback.jpg"
+        //img: PHOTO[r[0]] || "fallback.jpg"
       }));
       updateFromSheet(data);
     } catch (err) {
