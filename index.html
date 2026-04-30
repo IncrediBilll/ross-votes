@@ -289,6 +289,9 @@ candidates.forEach((c, index) => {
 
   ring.style.top = `${50 + (size - 120) / 2}px`;
 
+  // Position ring exactly behind the image
+  ring.style.top = img.offsetTop + "px";
+
   // Apply gold/silver/bronze
   if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
   else if (c.name === second && c.votes > 0) ring.classList.add("silver-ring");
