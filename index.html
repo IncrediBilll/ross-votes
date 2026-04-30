@@ -35,7 +35,7 @@
       flex-direction: column;
       align-items: center;
       transition: transform 0.4s ease-out;
-	  padding-top: 80px;
+	  padding-top: 40px;
 	  min-height: 260px;
 	  position: relative;
     }
@@ -127,7 +127,7 @@
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vS5xpjc86c_i8yAS16l03R6F9osAGc8ptdR5_FHVctGtjpnp36QLs_vd0jdOIcyUawH1eKMzjCvgiKi/pub?gid=1879945228&single=true&output=csv";
 
   const PHOTO = {
-  "Mr Chrichton": "https://drive.google.com/uc?export=view&id=1E4n_5nku5K6OTUnicsp73r01FAyCFbmh",
+  "Mr Crichton": "https://drive.google.com/uc?export=view&id=1E4n_5nku5K6OTUnicsp73r01FAyCFbmh",
   "Mr Chalmers": "https://drive.google.com/uc?export=view&id=102oFk_04otLMMNv7_odF0ZOC8wUYzZOi",
   "Mr Mitchell": "https://drive.google.com/uc?export=view&id=1DPP0MRYV7T0awwF20BVhRjk9i7UAzLIO",
   "Mr Edoni": "https://drive.google.com/uc?export=view&id=FILEID4",
@@ -278,8 +278,6 @@ const first = candidates[0]?.name;
 const second = candidates[1]?.name;
 const third = candidates[2]?.name;
 
-candidates.forEach((c, index) => {
-  const el = document.getElementById(`candidate-${index}`);
   const ring = el.querySelector(".ring");
 
   // Reset rings
@@ -299,7 +297,7 @@ candidates.forEach((c, index) => {
 
   lastUpdated.textContent =
     "Last updated: " + new Date().toLocaleTimeString();
-  }}
+  }
   fetchVotes();
   setInterval(fetchVotes, 60000);
 </script>
