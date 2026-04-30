@@ -245,7 +245,7 @@ function updateDisplay() {
     const crown = el.querySelector(".crown");
     const img = el.querySelector("img");
     const votesLabel = el.querySelector(".votes");
-
+	
     const ratio = c.votes / maxVotes;
 
     let scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
@@ -256,10 +256,6 @@ function updateDisplay() {
 
     img.style.width = `${size}px`;
     img.style.height = `${size}px`;
-
-	const ring = el.querySelector(".ring");
-	ring.style.width = `${size}px`;
-	ring.style.height = `${size}px`;
 
     votesLabel.textContent = `Votes: ${c.votes}`;
 
@@ -276,9 +272,14 @@ function updateDisplay() {
   // SECOND LOOP — gold/silver/bronze rings
   candidates.forEach((c, index) => {
     const el = document.getElementById(`candidate-${index}`);
-
+	
+	  
     ring.className = "ring";
 
+	const ring = el.querySelector(".ring");
+	ring.style.width = `${size}px`;
+	ring.style.height = `${size}px`;
+	  
     if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
     else if (c.name === second && c.votes > 0) ring.classList.add("silver-ring");
     else if (c.name === third && c.votes > 0) ring.classList.add("bronze-ring");
