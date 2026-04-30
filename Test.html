@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Voting – Growing Faces</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    #container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+      justify-items: center;
+    }
+
+    .candidate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.4s ease-out;
+    }
+
+    .candidate img {
+      border-radius: 50%;
+      border: 4px solid #fbbf24;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      transition: transform 0.4s ease-out;
+      background: #374151;
+    }
+
+    .name {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .votes {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      color: #d1d5db;
+    }
+
+    #last-updated {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+	@keyframes bounce {
+  	0%   { transform: translateY(0) scale(1); }
+ 	30%  { transform: translateY(-15px) scale(1.1); }
+  	60%  { transform: translateY(0) scale(0.95); }
+  	100% { transform: translateY(0) scale(1); }
+    }
+
+	.bounce {  animation: bounce 0.6s ease-out;}
+
+  </style>
+</head>
+<body>
+  <h1>School Vote – Live Results</h1>
+
+  <div id="container"></div>
+  <div id="last-updated"></div>
+
+  <script>
+  const CSV_URL =
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vS5xpjc86c_i8yAS16l03R6F9osAGc8ptdR5_FHVctGtjpnp36QLs_vd0jdOIcyUawH1eKMzjCvgiKi/pub?gid=1879945228&single=true&output=csv";
+
+  const PHOTO = {
+  "Mr Chrichton": "https://drive.google.com/uc?export=view&id=1E4n_5nku5K6OTUnicsp73r01FAyCFbmh",
+  "Mr Chalmers": "https://drive.google.com/uc?export=view&id=102oFk_04otLMMNv7_odF0ZOC8wUYzZOi",
+  "Mr Mitchell": "https://drive.google.com/uc?export=view&id=1DPP0MRYV7T0awwF20BVhRjk9i7UAzLIO",
+  "Mr Edoni": "https://drive.google.com/uc?export=view&id=FILEID4",
+  "Miss Murphy": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Johnston": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Punton": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Miss Stewart": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mrs Livingstone": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Miss Notley": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Shafat": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Laud": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mrs Archer": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Redford": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Sinclair": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mr Fitzgerald": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Miss Millar": "https://drive.google.com/uc?export=view&id=FILEID5",
+};
+
+
+
+  let candidates = [];
+  let previousVotes = {}; // store last known vote counts
+
+  const MIN_SCALE = 0.7;
+  const MAX_SCALE = 2.0;
+
+  const container = document.getElementById("container");
+  const lastUpdated = document.getElementById("last-updated");
+
+  async function fetchVotes() {
+    try {
+      const response = await fetch(CSV_URL);
+      const text = await response.text();
+
+      const rows = text.trim().split("\n").map(r => r.split(","));
+
+      const data = rows.slice(1).map(r => ({
+        name: r[0].trim(),
+        votes: Number(r[1]),
+        img: PHOTO[r[0]] || "fallback.jpg"
+      }));
+	console.log("CSV name:", r[0], "→ Trimmed:", r[0].trim(), "→ Photo:", PHOTO[r[0].trim()]);
+      updateFromSheet(data);
+    } catch (err) {
+      console.error("Error fetching CSV:", err);
+    }
+  }
+
+  function updateFromSheet(data) {
+    data.sort((a, b) => b.votes - a.votes);
+
+    candidates = data;
+
+    renderCandidates();
+    updateDisplay();
+  }
+
+  function renderCandidates() {
+    container.innerHTML = "";
+
+    candidates.forEach((c, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "candidate";
+      wrapper.id = `candidate-${index}`;
+
+      const img = document.createElement("img");
+      img.src = c.img;
+      img.alt = c.name;
+
+      const name = document.createElement("div");
+      name.className = "name";
+      name.textContent = c.name;
+
+      const votes = document.createElement("div");
+      votes.className = "votes";
+      votes.textContent = "Votes: " + c.votes;
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(name);
+      wrapper.appendChild(votes);
+      container.appendChild(wrapper);
+    });
+  }
+
+  function updateDisplay() {
+    const maxVotes = Math.max(...candidates.map(c => c.votes), 1);
+
+    candidates.forEach((c, index) => {
+      const el = document.getElementById(`candidate-${index}`);
+      const img = el.querySelector("img");
+      const votesLabel = el.querySelector(".votes");
+
+      const ratio = c.votes / maxVotes;
+      const scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
+
+      img.style.transform = `scale(${scale})`;
+      el.style.transform = `scale(${scale})`;
+
+      votesLabel.textContent = `Votes: ${c.votes}`;
+
+      // --- BOUNCE WHEN VOTES INCREASE ---
+      if (previousVotes[c.name] !== undefined && c.votes > previousVotes[c.name]) {
+        el.classList.add("bounce");
+
+        // Remove class after animation ends
+        setTimeout(() => {
+          el.classList.remove("bounce");
+        }, 600);
+      }
+
+      previousVotes[c.name] = c.votes;
+    });
+
+    lastUpdated.textContent =
+      "Last updated: " + new Date().toLocaleTimeString();
+  }
+
+  fetchVotes();
+  setInterval(fetchVotes, 3000);
+</script>
+</body>
+</html>
