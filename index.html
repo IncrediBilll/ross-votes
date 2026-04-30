@@ -35,7 +35,7 @@
       flex-direction: column;
       align-items: center;
       transition: transform 0.4s ease-out;
-	  padding-top: 40px;
+	  padding-top: 50px;
 	  min-height: 260px;
 	  position: relative;
     }
@@ -82,16 +82,16 @@
 
    .crown {
   position: absolute;
-  top: -25px;
+  top: 25px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 40px;
   pointer-events: none;
 }
 
-	  .ring {
+.ring {
   position: absolute;
-  top: 0;
+  top: 40px; /* same as your padding-top */
   left: 50%;
   transform: translateX(-50%);
   width: 140px;
@@ -235,9 +235,11 @@ const data = rows.slice(1).map(r => {
 function updateDisplay() {
   const maxVotes = Math.max(...candidates.map(c => c.votes), 1);
 
-  // Identify the leader
-  const leader = candidates[0].name;
+  const first = candidates[0]?.name;
+  const second = candidates[1]?.name;
+  const third = candidates[2]?.name;
 
+  // FIRST LOOP — image size, bounce, crown
   candidates.forEach((c, index) => {
     const el = document.getElementById(`candidate-${index}`);
     const crown = el.querySelector(".crown");
@@ -246,58 +248,42 @@ function updateDisplay() {
 
     const ratio = c.votes / maxVotes;
 
-    // Calculate scale but clamp it
     let scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
-    scale = Math.min(scale, MAX_SCALE);  // cap the size
+    scale = Math.min(scale, MAX_SCALE);
 
-    // Apply scale ONLY to the image
-    const baseSize = 120; // or whatever your default is
-	const size = baseSize * scale;
+    const baseSize = 120;
+    const size = baseSize * scale;
 
-	img.style.width = `${size}px`;
-	img.style.height = "auto";
-
-    // Keep the card itself stable so the grid never breaks
-    el.style.transform = "scale(1)";
+    img.style.width = `${size}px`;
+    img.style.height = "auto";
 
     votesLabel.textContent = `Votes: ${c.votes}`;
 
-    // Bounce animation when votes increase
     if (previousVotes[c.name] !== undefined && c.votes > previousVotes[c.name]) {
       el.classList.add("bounce");
       setTimeout(() => el.classList.remove("bounce"), 600);
     }
 
-  if (c.name === leader && c.votes > 0) {
-    crown.textContent = "👑";
-  } else {
-    crown.textContent = "";}
-
-	  // Top 3 (if they exist)
-const first = candidates[0]?.name;
-const second = candidates[1]?.name;
-const third = candidates[2]?.name;
-
-  const ring = el.querySelector(".ring");
-
-  // Reset rings
-  ring.className = "ring";
-
-  if (c.name === first && c.votes > 0) {
-    ring.classList.add("gold-ring");
-  } else if (c.name === second && c.votes > 0) {
-    ring.classList.add("silver-ring");
-  } else if (c.name === third && c.votes > 0) {
-    ring.classList.add("bronze-ring");
-  }
-  
+    crown.textContent = (c.name === first && c.votes > 0) ? "👑" : "";
 
     previousVotes[c.name] = c.votes;
   });
 
+  // SECOND LOOP — gold/silver/bronze rings
+  candidates.forEach((c, index) => {
+    const el = document.getElementById(`candidate-${index}`);
+    const ring = el.querySelector(".ring");
+
+    ring.className = "ring";
+
+    if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
+    else if (c.name === second && c.votes > 0) ring.classList.add("silver-ring");
+    else if (c.name === third && c.votes > 0) ring.classList.add("bronze-ring");
+  });
+
   lastUpdated.textContent =
     "Last updated: " + new Date().toLocaleTimeString();
-  }
+}
   fetchVotes();
   setInterval(fetchVotes, 60000);
 </script>
