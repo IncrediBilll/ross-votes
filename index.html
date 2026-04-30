@@ -299,10 +299,9 @@ candidates.forEach((c, index) => {
 
   lastUpdated.textContent =
     "Last updated: " + new Date().toLocaleTimeString();
-}
 
   fetchVotes();
-  setInterval(fetchVotes, 3000);
+  setInterval(fetchVotes, 60000);
 </script>
 </body>
 </html>
