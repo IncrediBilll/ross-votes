@@ -257,6 +257,10 @@ function updateDisplay() {
     img.style.width = `${size}px`;
     img.style.height = `${size}px`;
 
+	const ring = el.querySelector(".ring");
+	ring.style.width = `${size}px`;
+	ring.style.height = `${size}px`;
+
     votesLabel.textContent = `Votes: ${c.votes}`;
 
     if (previousVotes[c.name] !== undefined && c.votes > previousVotes[c.name]) {
@@ -272,7 +276,6 @@ function updateDisplay() {
   // SECOND LOOP — gold/silver/bronze rings
   candidates.forEach((c, index) => {
     const el = document.getElementById(`candidate-${index}`);
-    const ring = el.querySelector(".ring");
 
     ring.className = "ring";
 
