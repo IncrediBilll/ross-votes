@@ -23,7 +23,7 @@
 
 #container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 50px;
   width: 100%;
   max-width: 1400px;
@@ -36,6 +36,7 @@
       align-items: center;
       transition: transform 0.4s ease-out;
 	  padding-top: 50px;
+	  padding: 0 20px;
 	  min-height: 260px;
 	  position: relative;
     }
@@ -272,7 +273,6 @@ function updateDisplay() {
   // SECOND LOOP — gold/silver/bronze rings
   candidates.forEach((c, index) => {
     const el = document.getElementById(`candidate-${index}`);
-	
 	  
     ring.className = "ring";
 
