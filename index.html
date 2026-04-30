@@ -270,20 +270,29 @@ function updateDisplay() {
     previousVotes[c.name] = c.votes;
   });
 
-  // SECOND LOOP — gold/silver/bronze rings
-  candidates.forEach((c, index) => {
-    const el = document.getElementById(`candidate-${index}`);
-	  
-    ring.className = "ring";
+// SECOND LOOP — gold/silver/bronze rings
+candidates.forEach((c, index) => {
+  const el = document.getElementById(`candidate-${index}`);
+  const ring = el.querySelector(".ring");
 
-	const ring = el.querySelector(".ring");
-	ring.style.width = `${size}px`;
-	ring.style.height = `${size}px`;
-	  
-    if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
-    else if (c.name === second && c.votes > 0) ring.classList.add("silver-ring");
-    else if (c.name === third && c.votes > 0) ring.classList.add("bronze-ring");
-  });
+  // Reset ring
+  ring.className = "ring";
+
+  // Scale ring to match image size
+  const ratio = c.votes / maxVotes;
+  let scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
+  scale = Math.min(scale, MAX_SCALE);
+  const baseSize = 120;
+  const size = baseSize * scale;
+
+  ring.style.width = `${size}px`;
+  ring.style.height = `${size}px`;
+
+  // Apply gold/silver/bronze
+  if (c.name === first && c.votes > 0) ring.classList.add("gold-ring");
+  else if (c.name === second && c.votes > 0) ring.classList.add("silver-ring");
+  else if (c.name === third && c.votes > 0) ring.classList.add("bronze-ring");
+});
 
   lastUpdated.textContent =
     "Last updated: " + new Date().toLocaleTimeString();
