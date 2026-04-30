@@ -43,7 +43,7 @@
 
     .candidate img {
       border-radius: 50%;
-      border: 4px solid #fbbf24;
+      border: 4px solid #27348b;
       box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
       width: 120px;
       height: 120px;
@@ -83,10 +83,9 @@
 
    .crown {
   position: absolute;
-  top: 25px;
   left: 50%;
-  transform: translateX(-50%, 0);
-  font-size: 40px;
+  transform: translateX(-50%);
+  font-size: 60px;
   pointer-events: none;
 }
 
@@ -264,7 +263,17 @@ function updateDisplay() {
       setTimeout(() => el.classList.remove("bounce"), 600);
     }
 
-    crown.textContent = (c.name === first && c.votes > 0) ? "👑" : "";
+    if (c.name === first && c.votes > 0) {
+      crown.textContent = "👑";
+
+    // Position crown above the image
+    const imgTop = img.offsetTop;
+    const crownHeight = 40; // same as CSS font-size
+    crown.style.top = (imgTop - crownHeight + 10) + "px";
+
+    } else {
+      crown.textContent = "";
+    }
 
     previousVotes[c.name] = c.votes;
   });
