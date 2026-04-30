@@ -129,7 +129,6 @@
         votes: Number(r[1]),
         img: PHOTO[r[0]] || "fallback.jpg"
       }));
-	console.log("CSV name:", r[0], "→ Trimmed:", r[0].trim(), "→ Photo:", PHOTO[r[0].trim()]);
       updateFromSheet(data);
     } catch (err) {
       console.error("Error fetching CSV:", err);
