@@ -273,7 +273,8 @@ function updateDisplay() {
 candidates.forEach((c, index) => {
   const el = document.getElementById(`candidate-${index}`);
   const ring = el.querySelector(".ring");
-
+  const img = el.querySelector("img");
+	
   // Reset ring
   ring.className = "ring";
 
