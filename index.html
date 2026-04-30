@@ -104,6 +104,8 @@
   "Mr Sinclair": "https://drive.google.com/uc?export=view&id=FILEID5",
   "Mr Fitzgerald": "https://drive.google.com/uc?export=view&id=FILEID5",
   "Miss Millar": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mrs Fulton": "https://drive.google.com/uc?export=view&id=FILEID5",
+  "Mrs Carroll": "https://drive.google.com/uc?export=view&id=FILEID5"
 };
 
 
@@ -136,7 +138,7 @@ const data = rows.slice(1).map(r => {
   return {
     name,
     votes: Number(r[1]),
-    //img: PHOTO[name] || "https://via.placeholder.com/200?text=No+Photo"
+    img: PHOTO[name] || "https://via.placeholder.com/200?text=No+Photo"
   };
 });
       updateFromSheet(data);
