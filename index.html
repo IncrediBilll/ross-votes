@@ -35,8 +35,8 @@
       flex-direction: column;
       align-items: center;
       transition: transform 0.4s ease-out;
-	  padding-top: 20px;
-	  min-height: 220px;
+	  padding-top: 80px;
+	  min-height: 260px;
 	  position: relative;
     }
 
@@ -87,6 +87,30 @@
   transform: translateX(-50%);
   font-size: 40px;
   pointer-events: none;
+}
+
+	  .ring {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.gold-ring {
+  box-shadow: 0 0 25px 10px rgba(255, 215, 0, 0.8);
+}
+
+.silver-ring {
+  box-shadow: 0 0 25px 10px rgba(192, 192, 192, 0.8);
+}
+
+.bronze-ring {
+  box-shadow: 0 0 25px 10px rgba(205, 127, 50, 0.8);
 }
 
 
@@ -196,8 +220,12 @@ const data = rows.slice(1).map(r => {
       crown.className = "crown";
       crown.textContent = ""; // empty by default
 
+	  const ring = document.createElement("div");
+	  ring.className = "ring";
+
 	  wrapper.appendChild(crown);
-      wrapper.appendChild(img);
+      wrapper.appendChild(ring);
+	  wrapper.appendChild(img);
       wrapper.appendChild(name);
       wrapper.appendChild(votes);
       container.appendChild(wrapper);
@@ -223,7 +251,11 @@ function updateDisplay() {
     scale = Math.min(scale, MAX_SCALE);  // cap the size
 
     // Apply scale ONLY to the image
-    img.style.transform = `scale(${scale})`;
+    const baseSize = 120; // or whatever your default is
+	const size = baseSize * scale;
+
+	img.style.width = `${size}px`;
+	img.style.height = "auto";
 
     // Keep the card itself stable so the grid never breaks
     el.style.transform = "scale(1)";
@@ -240,6 +272,26 @@ function updateDisplay() {
     crown.textContent = "👑";
   } else {
     crown.textContent = "";}
+
+	  // Top 3 (if they exist)
+const first = candidates[0]?.name;
+const second = candidates[1]?.name;
+const third = candidates[2]?.name;
+
+candidates.forEach((c, index) => {
+  const el = document.getElementById(`candidate-${index}`);
+  const ring = el.querySelector(".ring");
+
+  // Reset rings
+  ring.className = "ring";
+
+  if (c.name === first && c.votes > 0) {
+    ring.classList.add("gold-ring");
+  } else if (c.name === second && c.votes > 0) {
+    ring.classList.add("silver-ring");
+  } else if (c.name === third && c.votes > 0) {
+    ring.classList.add("bronze-ring");
+  }
   
 
     previousVotes[c.name] = c.votes;
