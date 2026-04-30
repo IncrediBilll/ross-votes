@@ -20,14 +20,14 @@
       text-align: center;
     }
 
-    #container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-      width: 100%;
-      max-width: 1200px;
-      justify-items: center;
-    }
+#container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 40px;
+  width: 100%;
+  max-width: 1400px;
+  justify-items: center;
+}
 
     .candidate {
       display: flex;
@@ -64,6 +64,12 @@
       font-size: 0.85rem;
       color: #6b7280;
     }
+
+	  #container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;   /* was 30px */
+}
 
 	@keyframes bounce {
   	0%   { transform: translateY(0) scale(1); }
@@ -183,38 +189,40 @@ const data = rows.slice(1).map(r => {
     });
   }
 
-  function updateDisplay() {
-    const maxVotes = Math.max(...candidates.map(c => c.votes), 1);
+function updateDisplay() {
+  const maxVotes = Math.max(...candidates.map(c => c.votes), 1);
 
-    candidates.forEach((c, index) => {
-      const el = document.getElementById(`candidate-${index}`);
-      const img = el.querySelector("img");
-      const votesLabel = el.querySelector(".votes");
+  candidates.forEach((c, index) => {
+    const el = document.getElementById(`candidate-${index}`);
+    const img = el.querySelector("img");
+    const votesLabel = el.querySelector(".votes");
 
-      const ratio = c.votes / maxVotes;
-      const scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
+    const ratio = c.votes / maxVotes;
 
-      img.style.transform = `scale(${scale})`;
-      el.style.transform = `scale(${scale})`;
+    // Calculate scale but clamp it
+    let scale = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * ratio;
+    scale = Math.min(scale, MAX_SCALE);  // cap the size
 
-      votesLabel.textContent = `Votes: ${c.votes}`;
+    // Apply scale ONLY to the image
+    img.style.transform = `scale(${scale})`;
 
-      // --- BOUNCE WHEN VOTES INCREASE ---
-      if (previousVotes[c.name] !== undefined && c.votes > previousVotes[c.name]) {
-        el.classList.add("bounce");
+    // Keep the card itself stable so the grid never breaks
+    el.style.transform = "scale(1)";
 
-        // Remove class after animation ends
-        setTimeout(() => {
-          el.classList.remove("bounce");
-        }, 600);
-      }
+    votesLabel.textContent = `Votes: ${c.votes}`;
 
-      previousVotes[c.name] = c.votes;
-    });
+    // Bounce animation when votes increase
+    if (previousVotes[c.name] !== undefined && c.votes > previousVotes[c.name]) {
+      el.classList.add("bounce");
+      setTimeout(() => el.classList.remove("bounce"), 600);
+    }
 
-    lastUpdated.textContent =
-      "Last updated: " + new Date().toLocaleTimeString();
-  }
+    previousVotes[c.name] = c.votes;
+  });
+
+  lastUpdated.textContent =
+    "Last updated: " + new Date().toLocaleTimeString();
+}
 
   fetchVotes();
   setInterval(fetchVotes, 3000);
